@@ -9,6 +9,8 @@ QUERY_TYPE_CHOICES = [
     (EVERYTHING, "Everything"),
 ]
 
+QUERY_TYPE_DICT = { k:v for k,v in QUERY_TYPE_CHOICES }
+
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
     country = CountryField()
@@ -19,3 +21,19 @@ class NewsAPIQuery(models.Model):
         choices = QUERY_TYPE_CHOICES,
         default = TOP_HEADLINES
     )
+
+    def __str__(self):
+        repr = "{}".format(QUERY_TYPE_DICT[self.query_type])
+        if self.country.code != "":
+            repr += " in {}".format(self.country.name)
+
+        if self.keyword != None:
+            repr += " with keyword '{}'".format(self.keyword)
+
+        if self.category != None:
+            repr += " in category '{}'".format(self.category)
+
+        if self.sources != None:
+            repr += " from sources '{}'".format(self.sources)
+
+        return repr
