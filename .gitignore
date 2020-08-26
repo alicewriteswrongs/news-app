@@ -276,4 +276,5 @@ news_app/media/
 .ipython/
 .env
 .envs/*
+.envs/.local/.newsapi
 !.envs/.local/
