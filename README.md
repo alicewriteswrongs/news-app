@@ -1,24 +1,13 @@
-News App
-========
+# News App
 
 A News App
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg)](https://github.com/pydanny/cookiecutter-django/)
-
-[![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-
-License
-
-:   GPLv3
-
-Settings
---------
+## Settings
 
 Moved to
 [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
-Basic Commands
---------------
+## Basic Commands
 
 ### Setting Up Your Users
 
@@ -75,8 +64,7 @@ Please note: For Celery\'s import magic to work, it is important *where*
 the celery commands are run. If you are in the same folder with
 *manage.py*, you should be right.
 
-Deployment
-----------
+## Deployment
 
 The following details how to deploy this application.
 
