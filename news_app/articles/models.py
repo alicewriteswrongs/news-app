@@ -13,7 +13,7 @@ QUERY_TYPE_DICT = { k:v for k,v in QUERY_TYPE_CHOICES }
 
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
-    country = CountryField()
+    country = CountryField(blank=True)
     category = models.CharField(max_length=20, null=True, blank=True)
     sources = models.CharField(max_length=200, null=True, blank=True)
     query_type = models.CharField(
@@ -21,6 +21,18 @@ class NewsAPIQuery(models.Model):
         choices = QUERY_TYPE_CHOICES,
         default = TOP_HEADLINES
     )
+
+    def base_api_url(self):
+        return "https://newsapi.org/v2/{}".format(self.query_type)
+
+    def params(self):
+        params = {
+            "q": self.keyword,
+            "country":  self.country.code if self.country.code != "" else None,
+            "sources": self.sources,
+            "category": self.category
+        }
+        return { k: v for k,v in params.items() if v != None}
 
     def __str__(self):
         repr = "{}".format(QUERY_TYPE_DICT[self.query_type])
