@@ -290,3 +290,4 @@ SOCIALACCOUNT_ADAPTER = "news_app.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+NEWS_API_KEY = env("NEWS_API_KEY")

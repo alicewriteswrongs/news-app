@@ -1,5 +1,7 @@
 from django.db import models
 from django_countries.fields import CountryField
+from requests import get
+from django.conf import settings
 
 TOP_HEADLINES = "top-headlines"
 EVERYTHING = "everything"
@@ -33,6 +35,14 @@ class NewsAPIQuery(models.Model):
             "category": self.category
         }
         return { k: v for k,v in params.items() if v != None}
+
+    def get_results(self):
+        response = get(
+            self.base_api_url(),
+            params = self.params(),
+            headers = { "X-Api-Key": settings.NEWS_API_KEY }
+        )
+        return response.json()
 
     def __str__(self):
         repr = "{}".format(QUERY_TYPE_DICT[self.query_type])
