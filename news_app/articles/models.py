@@ -59,3 +59,10 @@ class NewsAPIQuery(models.Model):
             repr += " from sources '{}'".format(self.sources)
 
         return repr
+
+class Article(models.Model):
+    source = models.CharField(max_length= 50)
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    url = models.URLField()
+    publish_date = models.DateTimeField()
