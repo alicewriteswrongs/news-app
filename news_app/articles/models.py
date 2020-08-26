@@ -30,6 +30,8 @@ LANGUAGE_CHOICES = [
     ("zh", "Chinese")
 ]
 
+LANGUAGE_DICT = { k:v for k,v in LANGUAGE_CHOICES }
+
 
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
@@ -44,7 +46,8 @@ class NewsAPIQuery(models.Model):
     language = models.CharField(
         max_length=2,
         choices = LANGUAGE_CHOICES,
-        default="en"
+        null=True,
+        blank=True
     )
 
     def base_api_url(self):
@@ -94,6 +97,9 @@ class NewsAPIQuery(models.Model):
 
         if self.sources != None:
             repr += " from sources '{}'".format(self.sources)
+
+        if self.language != None:
+            repr += " in {}".format(LANGUAGE_DICT[self.language])
 
         return repr
 
