@@ -2,6 +2,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from requests import get
 from django.conf import settings
+from dateutil import parser
 
 TOP_HEADLINES = "top-headlines"
 EVERYTHING = "everything"
@@ -13,6 +14,23 @@ QUERY_TYPE_CHOICES = [
 
 QUERY_TYPE_DICT = { k:v for k,v in QUERY_TYPE_CHOICES }
 
+LANGUAGE_CHOICES = [
+    ("ar", "Arabic"),
+    ("de", "German"),
+    ("en", "English"),
+    ("es", "Spanish"),
+    ("fr", "French"),
+    ("he", "Hebrew"),
+    ("it", "Italian"),
+    ("nl", "Dutch"),
+    ("no", "Norwegian"),
+    ("pt", "Portuguese"),
+    ("ru", "Russia"),
+    ("se", "Swedish"),
+    ("zh", "Chinese")
+]
+
+
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
     country = CountryField(blank=True)
@@ -23,6 +41,11 @@ class NewsAPIQuery(models.Model):
         choices = QUERY_TYPE_CHOICES,
         default = TOP_HEADLINES
     )
+    language = models.CharField(
+        max_length=2,
+        choices = LANGUAGE_CHOICES,
+        default="en"
+    )
 
     def base_api_url(self):
         return "https://newsapi.org/v2/{}".format(self.query_type)
@@ -32,7 +55,8 @@ class NewsAPIQuery(models.Model):
             "q": self.keyword,
             "country":  self.country.code if self.country.code != "" else None,
             "sources": self.sources,
-            "category": self.category
+            "category": self.category,
+            "language": self.language
         }
         return { k: v for k,v in params.items() if v != None}
 
@@ -43,6 +67,19 @@ class NewsAPIQuery(models.Model):
             headers = { "X-Api-Key": settings.NEWS_API_KEY }
         )
         return response.json()
+
+    def fetch_and_save_new_articles(self):
+        for article in self.get_results()["articles"]:
+            # this needs to be a get_or_create or something
+            # to avoid dupes
+            new_article = Article(
+                source = article["source"]["name"],
+                title = article["title"],
+                description = article["description"],
+                url = article["url"],
+                publish_date = parser.isoparse(article["publishedAt"])
+            )
+            new_article.save()
 
     def __str__(self):
         repr = "{}".format(QUERY_TYPE_DICT[self.query_type])
@@ -63,6 +100,9 @@ class NewsAPIQuery(models.Model):
 class Article(models.Model):
     source = models.CharField(max_length= 50)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=300)
     url = models.URLField()
     publish_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.title
