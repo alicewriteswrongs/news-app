@@ -103,11 +103,19 @@ class NewsAPIQuery(models.Model):
 
         return repr
 
+class RSSFeed(models.Model):
+    display_name = models.CharField(max_length = 100)
+    url = models.URLField(
+        max_length=300
+    )
+
 class Article(models.Model):
     source = models.CharField(max_length= 50)
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=300)
-    url = models.URLField()
+    url = models.URLField(
+        max_length = 500
+    )
     publish_date = models.DateTimeField()
 
     def __str__(self):
