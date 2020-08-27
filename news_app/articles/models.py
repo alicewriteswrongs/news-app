@@ -3,6 +3,8 @@ from django_countries.fields import CountryField
 from requests import get
 from django.conf import settings
 from dateutil import parser
+from datetime import datetime
+import feedparser
 
 TOP_HEADLINES = "top-headlines"
 EVERYTHING = "everything"
@@ -108,6 +110,21 @@ class RSSFeed(models.Model):
     url = models.URLField(
         max_length=300
     )
+    
+    def fetch_and_save_new_articles(self):
+        feed = feedparser.parse(self.url)
+        for entry in feed.entries:
+            new_article = Article(
+                source = self.display_name,
+                title = entry['title'],
+                description=  entry['description'],
+                url = entry['link'],
+                publish_date = datetime(*entry['published_parsed'][:6])
+            )
+            new_article.save()
+
+    def __str__(self):
+        return self.display_name
 
 class Article(models.Model):
     source = models.CharField(max_length= 50)
