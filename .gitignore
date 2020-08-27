@@ -278,3 +278,5 @@ news_app/media/
 .envs/*
 .envs/.local/.newsapi
 !.envs/.local/
+
+private
