@@ -7,6 +7,8 @@ from datetime import datetime
 import feedparser
 from bs4 import BeautifulSoup
 
+from news_app.articles.util import truncate
+
 TOP_HEADLINES = "top-headlines"
 EVERYTHING = "everything"
 
@@ -38,6 +40,20 @@ LANGUAGE_DICT = { k:v for k,v in LANGUAGE_CHOICES }
 class Edition(models.Model):
     display_name = models.CharField(max_length=100)
     refreshed = models.DateTimeField()
+
+    def __str__(self):
+        return self.display_name
+
+    def refresh(self):
+        for query in NewsAPIQuery.objects.filter(edition=self):
+            query.fetch_and_save_new_articles()
+
+        for feed in RSSFeed.objects.filter(edition=self):
+            feed.fetch_and_save_new_articles()
+
+        self.refreshed = datetime.now()
+        self.save()
+
 
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
@@ -88,9 +104,10 @@ class NewsAPIQuery(models.Model):
                 url = article["url"],
                 defaults = {
                     "source" : article["source"]["name"],
-                    "title" : article["title"],
-                    "description" : article["description"] or "",
-                    "publish_date" : parser.isoparse(article["publishedAt"])
+                    "title" : truncate(article["title"], 200),
+                    "description":  truncate(article["description"] or "", 300),
+                    "publish_date" : parser.isoparse(article["publishedAt"]),
+                    "edition": self.edition
                 }
             )
 
@@ -113,6 +130,7 @@ class NewsAPIQuery(models.Model):
 
         return repr
 
+
 class RSSFeed(models.Model):
     display_name = models.CharField(max_length = 100)
     url = models.URLField(
@@ -124,22 +142,37 @@ class RSSFeed(models.Model):
         null=True
     )
 
-    def fetch_and_save_new_articles(self):
+    def parse_feed(self):
         feed = feedparser.parse(self.url)
+        return feed
+
+    def fetch_and_save_new_articles(self):
+        feed = self.parse_feed()
         for entry in feed.entries:
+            date = entry.get('published_parsed')
+            if date is None:
+                date = entry.get('updated_parsed')
+
+            text = BeautifulSoup(
+                entry['description'],
+                features="html.parser"
+            ).text
+
             Article.objects.update_or_create(
                 url = entry['link'],
                 defaults= {
                     "source" : self.display_name,
-                    "title" : entry['title'],
-                    "description":  BeautifulSoup(entry['description']).text,
+                    "title" : truncate(entry['title'], 200),
+                    "description":  truncate(text, 300),
                     "url" : entry['link'],
-                    "publish_date" : datetime(*entry['published_parsed'][:6])
+                    "publish_date" : datetime(*date[:6]),
+                    "edition": self.edition
                 }
             )
 
     def __str__(self):
         return self.display_name
+
 
 class Article(models.Model):
     source = models.CharField(max_length= 50)
