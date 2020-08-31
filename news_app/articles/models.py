@@ -35,6 +35,9 @@ LANGUAGE_CHOICES = [
 
 LANGUAGE_DICT = { k:v for k,v in LANGUAGE_CHOICES }
 
+class Edition(models.Model):
+    display_name = models.CharField(max_length=100)
+    refreshed = models.DateTimeField()
 
 class NewsAPIQuery(models.Model):
     keyword = models.CharField(max_length=50, null=True, blank=True)
@@ -51,6 +54,11 @@ class NewsAPIQuery(models.Model):
         choices = LANGUAGE_CHOICES,
         null=True,
         blank=True
+    )
+    edition = models.ForeignKey(
+        Edition,
+        on_delete=models.CASCADE,
+        null=True
     )
 
     def base_api_url(self):
@@ -71,7 +79,6 @@ class NewsAPIQuery(models.Model):
             self.base_api_url(),
             params = self.params(),
             headers = { "X-Api-Key": settings.NEWS_API_KEY }
-                "url" = article["url"],
         )
         return response.json()
 
@@ -111,6 +118,11 @@ class RSSFeed(models.Model):
     url = models.URLField(
         max_length=300
     )
+    edition = models.ForeignKey(
+        Edition,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def fetch_and_save_new_articles(self):
         feed = feedparser.parse(self.url)
@@ -137,6 +149,11 @@ class Article(models.Model):
         max_length = 500
     )
     publish_date = models.DateTimeField()
+    edition = models.ForeignKey(
+        Edition,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self):
         return self.title
