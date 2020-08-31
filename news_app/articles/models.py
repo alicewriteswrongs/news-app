@@ -30,7 +30,7 @@ LANGUAGE_CHOICES = [
     ("nl", "Dutch"),
     ("no", "Norwegian"),
     ("pt", "Portuguese"),
-    ("ru", "Russia"),
+    ("ru", "Russian"),
     ("se", "Swedish"),
     ("zh", "Chinese")
 ]
