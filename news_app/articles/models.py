@@ -56,7 +56,7 @@ class Edition(models.Model):
         return self.feed()
 
     def feed(self):
-        query = Article.filter(
+        query = Article.objects.filter(
             edition=self
         ).order_by('-publish_date')
         return list(query)
