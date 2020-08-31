@@ -53,6 +53,13 @@ class Edition(models.Model):
 
         self.refreshed = datetime.now()
         self.save()
+        return self.feed()
+
+    def feed(self):
+        query = Article.filter(
+            edition=self
+        ).order_by('-publish_date')
+        return list(query)
 
 
 class NewsAPIQuery(models.Model):
