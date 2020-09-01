@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ edition.display_name }}</h2>
+{% for article in articles %}
+<a href="{{ article.url }}">
+  <div class="article">
+    <h2>{{ article.title }}</h2>
+    <span>{{ article.source }}</span>
+  </div>
+</a>
+{% endfor %}
+{% endblock %}
