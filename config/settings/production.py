@@ -55,29 +55,29 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
 
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("../..")))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("../..")))
 
-# # Static files (CSS, JavaScript, Images)
-# # https://docs.djangoproject.com/en/1.9/howto/static-files/
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATIC_URL = '/static/'
 
-# # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, '../../news_app/static')
-# )
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'news_app/static')
+)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-SETTINGS_FILE_PATH = os.path.abspath(os.path.dirname(__file__))
-PROJECT_ROOT = os.path.join(SETTINGS_FILE_PATH, "../..")
-PROJECT_DIR = os.path.join(PROJECT_ROOT,'../news_app')
+# SETTINGS_FILE_PATH = os.path.abspath(os.path.dirname(__file__))
+# PROJECT_ROOT = os.path.join(SETTINGS_FILE_PATH, "../..")
+# PROJECT_DIR = os.path.join(PROJECT_ROOT,'../news_app')
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT,'staticfiles/')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_DIR,'static/'),
-)
+# STATIC_ROOT = os.path.join(PROJECT_ROOT,'staticfiles/')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(PROJECT_DIR,'static/'),
+# )
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
