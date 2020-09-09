@@ -55,7 +55,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("../..")))
+BASE_DIR = os.path.abspath("../..")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
