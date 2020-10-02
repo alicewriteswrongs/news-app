@@ -4,10 +4,15 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from rest_framework import routers
 
-from news_app.articles.views import edition_detail
+from news_app.articles.views import edition_detail, EditionViewSet
+
+router = routers.DefaultRouter()
+router.register(r"api/editions", EditionViewSet)
 
 urlpatterns = [
+    path("", include(router.urls)),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"

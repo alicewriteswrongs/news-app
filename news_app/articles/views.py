@@ -1,6 +1,19 @@
 from django.http import Http404
 from django.shortcuts import render
 from news_app.articles.models import Edition
+from rest_framework import viewsets
+from rest_framework import permissions
+from news_app.articles.serializers import EditionSerializer
+
+
+class EditionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Edition.objects.all()
+    serializer_class = EditionSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+
 
 def edition_detail(request, edition_id):
     try:
