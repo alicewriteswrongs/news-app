@@ -21,9 +21,8 @@ def edition_detail(request, edition_id):
     except Edition.DoesNotExist:
         raise Http404("Edition does not exist")
 
-    articles = edition.feed()
     return render(
         request,
         "articles/edition.html",
-        {"articles": articles, "edition": edition }
+        {"edition": edition }
     )

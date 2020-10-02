@@ -1,12 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>{{ edition.display_name }}</h2>
-{% for article in articles %}
-<a href="{{ article.url }}">
-  <div class="article">
-    <h2>{{ article.title }}</h2>
-    <span>{{ article.source }}</span>
-  </div>
-</a>
-{% endfor %}
+<div id="article-div"></div>
+<script>
+  const editionID = window.location.pathname.split("/")[2]
+
+  const getEdition = async (id) => {
+    const resp = await window.fetch(`/api/editions/${id}`)
+    const json = await resp.json()
+    return json
+  }
+
+  const renderHTML = html => {
+    const template = document.createElement('template')
+    template.innerHTML = html
+    return template.content.firstChild
+  }
+
+  getEdition(editionID).then(json => {
+    const articlesEl = document.querySelector("#article-div")
+
+    articlesEl.appendChild(
+      renderHTML(`<span>updated at ${new Date(json.refreshed)}</span>`)
+    )
+
+    json.feed.forEach(article => {
+      articlesEl.appendChild(
+        renderHTML(
+            `<a href="${ article.url }">
+              <div class="article">
+                <h2>${ article.title }</h2>
+                <span>${ article.source }</span>
+              </div>
+            </a>`
+          )
+        )
+    })
+  })
+</script>
 {% endblock %}
