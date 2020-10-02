@@ -9,10 +9,10 @@ from rest_framework import routers
 from news_app.articles.views import edition_detail, EditionViewSet
 
 router = routers.DefaultRouter()
-router.register(r"api/editions", EditionViewSet)
+router.register(r"editions", EditionViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"

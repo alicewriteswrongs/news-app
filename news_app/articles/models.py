@@ -55,11 +55,10 @@ class Edition(models.Model):
         self.save()
         return self.feed()
 
-    def feed(self):
-        query = Article.objects.filter(
+    def articles(self):
+        return Article.objects.filter(
             edition=self
         ).order_by('-publish_date')
-        return list(query)
 
 
 class NewsAPIQuery(models.Model):

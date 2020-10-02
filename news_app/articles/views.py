@@ -6,13 +6,13 @@ from rest_framework import permissions
 from news_app.articles.serializers import EditionSerializer
 
 
-class EditionViewSet(viewsets.ModelViewSet):
+class EditionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = Edition.objects.all()
     serializer_class = EditionSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 
 def edition_detail(request, edition_id):
