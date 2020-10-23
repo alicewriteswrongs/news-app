@@ -27,10 +27,21 @@
     return template.content.firstChild
   }
 
-  const hitAPIAndRender = apiFunc => async (id) => {
+  const removeChildren = (node)  => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild);
+    }
+  }
+
+  const hitAPIAndRender = (apiFunc, placeholder) => async (id) => {
+    const articlesEl = document.querySelector("#article-div")
+
+    removeChildren(articlesEl)
+    articlesEl.innerText = placeholder
+
     const { feed, refreshed } = await apiFunc(id)
 
-    const articlesEl = document.querySelector("#article-div")
+    removeChildren(articlesEl)
 
     articlesEl.appendChild(
       renderHTML(`<span>updated at ${new Date(refreshed)}</span>`)
@@ -39,7 +50,7 @@
     feed.forEach(article => {
       articlesEl.appendChild(
         renderHTML(
-            `<a href="${ article.url }">
+            `<a target="_blank" href="${ article.url }">
               <div class="article">
                 <h2>${ article.title }</h2>
                 <span>${ article.source }</span>
@@ -50,10 +61,16 @@
     })
   }
 
-  const fetchEditionAndRender = hitAPIAndRender(getEdition)
+  const fetchEditionAndRender = hitAPIAndRender(getEdition, "fetching articles...")
 
-  const refreshEditionAndRender = hitAPIAndRender(refreshEdition)
+  const refreshEditionAndRender = hitAPIAndRender(refreshEdition, "refreshing edition...")
 
+  const refreshButton = document.querySelector("#refresh-button")
+
+  refreshButton.onclick = e => {
+    e.preventDefault()
+    refreshEditionAndRender(editionID)
+  }
 
   fetchEditionAndRender(editionID)
 </script>
