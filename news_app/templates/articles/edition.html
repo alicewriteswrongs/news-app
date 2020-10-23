@@ -2,6 +2,13 @@
 {% block content %}
 <h2>{{ edition.display_name }}</h2>
 <button id="refresh-button">refresh</button>
+<div>
+  {% for edition in editions %}
+  <a href="/edition/{{edition.id}}">
+    {{ edition.display_name }}
+  </a>
+  {% endfor %}
+</div>
 <div id="article-div"></div>
 <script>
   const editionID = window.location.pathname.split("/")[2]

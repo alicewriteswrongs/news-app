@@ -38,8 +38,10 @@ def edition_detail(request, edition_id):
     except Edition.DoesNotExist:
         raise Http404("Edition does not exist")
 
+    editions = Edition.objects.all()
+
     return render(
         request,
         "articles/edition.html",
-        {"edition": edition }
+        {"edition": edition, "editions": editions }
     )
