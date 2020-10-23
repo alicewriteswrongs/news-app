@@ -1,13 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="article-header">
 <h2>{{ edition.display_name }}</h2>
 <button id="refresh-button">refresh</button>
-<div>
-  {% for edition in editions %}
-  <a href="/edition/{{edition.id}}">
-    {{ edition.display_name }}
-  </a>
-  {% endfor %}
 </div>
 <div id="article-div"></div>
 <script>
@@ -51,18 +46,23 @@
     removeChildren(articlesEl)
 
     articlesEl.appendChild(
-      renderHTML(`<span>updated at ${new Date(refreshed)}</span>`)
+      renderHTML(`<span class="updated">updated at ${new Date(refreshed)}</span>`)
     )
 
     feed.forEach(article => {
       articlesEl.appendChild(
         renderHTML(
-            `<a target="_blank" href="${ article.url }">
-              <div class="article">
-                <h2>${ article.title }</h2>
-                <span>${ article.source }</span>
+          `<div class="article">
+            <a class="article-link" target="_blank" href="${ article.url }">
+              <div>
+                <h3>${ article.title }</h3>
+                <div class="source-time">
+                  <span>${ article.source }</span>
+                  <span>${ new Date(article.publish_date) }</span>
+                </div>
               </div>
-            </a>`
+            </a>
+          </div>`
           )
         )
     })

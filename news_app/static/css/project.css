@@ -28,5 +28,29 @@
     .nav .navbar div, .nav .navbar a {
       padding: 0 10px; }
 
-.main-content {
-  margin-top: 40px; }
+#article-div, .article-header {
+  max-width: 800px;
+  margin: auto; }
+
+.article-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  .article-header #refresh-button {
+    max-height: 30px; }
+
+#article-div .updated {
+  font-style: italic; }
+
+#article-div .article {
+  margin-top: 10px; }
+  #article-div .article h3 {
+    margin-bottom: 0; }
+  #article-div .article .source-time span {
+    color: black; }
