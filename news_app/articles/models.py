@@ -53,7 +53,7 @@ class Edition(models.Model):
 
         self.refreshed = datetime.now()
         self.save()
-        return self.feed()
+        return self.articles()
 
     def articles(self):
         return Article.objects.filter(

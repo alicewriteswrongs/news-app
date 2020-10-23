@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>{{ edition.display_name }}</h2>
+<button id="refresh-button">refresh</button>
 <div id="article-div"></div>
 <script>
   const editionID = window.location.pathname.split("/")[2]
@@ -11,20 +12,31 @@
     return json
   }
 
+  const refreshEdition = async (id) => {
+    const resp = await window.fetch(`/api/editions/${id}/refresh/`)
+    const json = await resp.json()
+    return json
+  }
+
+  window.refreshEdition = refreshEdition
+
+
   const renderHTML = html => {
     const template = document.createElement('template')
     template.innerHTML = html
     return template.content.firstChild
   }
 
-  getEdition(editionID).then(json => {
+  const hitAPIAndRender = apiFunc => async (id) => {
+    const { feed, refreshed } = await apiFunc(id)
+
     const articlesEl = document.querySelector("#article-div")
 
     articlesEl.appendChild(
-      renderHTML(`<span>updated at ${new Date(json.refreshed)}</span>`)
+      renderHTML(`<span>updated at ${new Date(refreshed)}</span>`)
     )
 
-    json.feed.forEach(article => {
+    feed.forEach(article => {
       articlesEl.appendChild(
         renderHTML(
             `<a href="${ article.url }">
@@ -36,6 +48,13 @@
           )
         )
     })
-  })
+  }
+
+  const fetchEditionAndRender = hitAPIAndRender(getEdition)
+
+  const refreshEditionAndRender = hitAPIAndRender(refreshEdition)
+
+
+  fetchEditionAndRender(editionID)
 </script>
 {% endblock %}
