@@ -1,1 +1,15 @@
 {% extends "base.html" %}
+{% block content %}
+<div class="homepage-content">
+  <h1>News!</h2>
+  <p>
+    News is organized into <i>editions</i>, which are generally based on
+    language or region.
+  </p>
+  {% for edition in editions %}
+    <a class="dropdown-item" href="/edition/{{edition.id}}">
+      {{ edition.display_name }}
+    </a>
+  {% endfor %}
+</div>
+{% endblock content %}

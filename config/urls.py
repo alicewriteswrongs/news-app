@@ -6,16 +6,16 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework import routers
 
-from news_app.articles.views import edition_detail, EditionViewSet
+from news_app.articles.views import edition_detail, EditionViewSet, NewsTemplateView
 
 router = routers.DefaultRouter()
 router.register(r"editions", EditionViewSet)
 
 urlpatterns = [
     path("api/", include(router.urls)),
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", NewsTemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+        "about/", NewsTemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),

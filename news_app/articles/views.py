@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.views.generic import TemplateView
 from django.shortcuts import render
 from news_app.articles.models import Edition
 from rest_framework import viewsets
@@ -45,3 +46,10 @@ def edition_detail(request, edition_id):
         "articles/edition.html",
         {"edition": edition, "editions": editions }
     )
+
+
+class NewsTemplateView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['editions'] = Edition.objects.all()
+        return context
